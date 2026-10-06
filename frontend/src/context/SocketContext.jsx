@@ -14,7 +14,7 @@ import react ,{
 
   export const SocketProvider = ({Children}) => {
     const socket = useRef(null);
-    CONST [CONNECTED , SetConnected]= useState(false);
+    const [CONNECTED , SetConnected]= useState(false);
 
     useEffect(() => {
       const token = localStorage.getItem("ssm_token ");
