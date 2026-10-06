@@ -29,7 +29,7 @@ import react ,{
       socket.current.on("connect ", () => SetConnected(true));
       socket.current.on("disconnect ", () => SetConnected(false));
 
-      return () => 
+      return () =>
         socket.current?.disconnect();}, [] );
 
       const subscribeToTicket= (ticketID) => {
@@ -39,7 +39,7 @@ import react ,{
 
         socket.current?.on("ticket:event",callback );
 
-      retrun () => {
+      return () => {
         socket.current?.off("ticket:event", callback );
       };
     };
