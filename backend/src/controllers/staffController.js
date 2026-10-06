@@ -2,7 +2,7 @@ const asyncHandler = require('express-async-handler');
 const Ticket = require('../models/Ticket');
 const { sendSuccess, sendError } = require('../utils/responseHandler');
 const { isValidTransition, logTicketHistory } = require('../utils/lifecycleHelper');
-
+const {emitTicketEvent} = require('../services/realtimeService');
 /**
  * @desc    Get tickets assigned to the logged in staff member
  * @route   GET /api/staff/tickets
@@ -62,6 +62,11 @@ const assignTicket = asyncHandler(async (req, res) => {
     });
   }
 
+  emitTicketEvent({
+    type:'ticke_assigned',
+    ticket :populated,
+    actor :req.user
+  });
   sendSuccess(res, populated, 'Ticket assigned successfully');
 });
 
@@ -125,6 +130,11 @@ const updateTicketStatus = asyncHandler(async (req, res) => {
     previousValue: prevStatus,
     newValue: status,
     changedBy: req.user._id
+  });
+  emitTicketEvent({
+    type:'ticke_status_confimed',
+    ticket :populated,
+    actor :req.user
   });
 
   sendSuccess(res, populated, `Ticket status updated to ${status}`);
@@ -192,6 +202,11 @@ const rejectTicket = asyncHandler(async (req, res) => {
       changedBy: req.user._id
     });
   }
+  emitTicketEvent({
+    type:'ticke_updated',
+    ticket :populated,
+    actor :req.user
+  });
 
   sendSuccess(res, populated, 'Ticket rejected and returned to unassigned queue');
 });

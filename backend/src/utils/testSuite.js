@@ -37,7 +37,7 @@ const runTestSuite = async () => {
     });
     const adminUser = await User.create({
       name: 'E2E Administrator',
-      email: 'admin@e2etest.com',
+      email: 'admin@exmaple.com',
       password: 'AdminPassword123!',
       role: 'ADMIN',
       department: 'Executive Management'

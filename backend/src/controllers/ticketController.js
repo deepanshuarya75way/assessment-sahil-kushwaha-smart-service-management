@@ -6,6 +6,7 @@ const generateTicketNumber = require('../utils/ticketNumberGenerator');
 const { classifyTicket } = require('../services/aiService');
 const { logTicketHistory } = require('../utils/lifecycleHelper');
 const { sendSuccess, sendError } = require('../utils/responseHandler');
+const {emitTicketEvent} = require('../services/realtimeService')
 
 /**
  * @desc    Create a new service request ticket (with location, department, AI classification & history logging)
@@ -60,6 +61,12 @@ const createTicket = asyncHandler(async (req, res) => {
     previousValue: '',
     newValue: 'PENDING',
     changedBy: req.user._id
+  });
+
+  emitTicketEvent({
+    type: 'TICKET_CREATED',
+    ticket :populatedTicket,
+    actor:req.user
   });
 
   sendSuccess(res, populatedTicket, 'Service request ticket created successfully', 201);
@@ -242,6 +249,12 @@ const addComment = asyncHandler(async (req, res) => {
 
   const populatedComment = await Comment.findById(comment._id).populate('userId', 'name role email');
 
+  emitTicketEvent({
+    type :'ticket_commented',
+    ticket,
+    comment:populationcommented,
+    actor:req.user
+  });
   sendSuccess(res, populatedComment, 'Comment added successfully', 201);
 });
 
