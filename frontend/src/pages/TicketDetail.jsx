@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { ArrowLeft, MessageSquare, Send, User, Clock, CheckCircle2, AlertCircle, Shield, Sparkles, MapPin, Building, History, Check, UserPlus, Tag, AlertTriangle } from 'lucide-react';
+import { useSocket } from '../context/SocketContext'; 
 
 export default function TicketDetail() {
   const { id } = useParams();
@@ -18,6 +19,11 @@ export default function TicketDetail() {
   const [newComment, setNewComment] = useState('');
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+
+  const {
+    subscribeToTIcket,
+    onTicketEvent } = useSocket();
+  }
 
   useEffect(() => {
     fetchTicketDetails();
