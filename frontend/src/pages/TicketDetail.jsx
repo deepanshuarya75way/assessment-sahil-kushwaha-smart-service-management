@@ -26,6 +26,19 @@ export default function TicketDetail() {
   }
 
   useEffect(() => {
+    if(!ticketId) return ;
+      subscribeToTIcket(TicketId);
+
+      const cleanup = onTicketEvent((Event) => {
+        if(event.TicketId === ticketId){
+          fetchTicket();
+        }
+
+    });
+    return cleanup;
+  }, [ticketId]);
+
+  useEffect(() => {
     fetchTicketDetails();
   }, [id]);
 
@@ -404,4 +417,4 @@ export default function TicketDetail() {
       </main>
     </div>
   );
-}
+
